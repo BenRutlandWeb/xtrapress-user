@@ -11,7 +11,7 @@ The class provides methods to interact with user roles in a more succinct manner
 Install via Composer:
 
 ```
-composer require brw/xp-user
+composer require brw/xtrapress-user
 ```
 
 Use Composer's autoload:
