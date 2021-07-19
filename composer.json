@@ -1,9 +1,10 @@
 {
-  "name": "brw/xp-user",
-  "description": "An extended WP_User class. X is better than W right?",
+  "name": "brw/xtrapress-user",
+  "description": "An extended WP_User class.",
   "keywords": [
     "WordPress",
-    "WP_User"
+    "WP_User",
+    "XtraPress"
   ],
   "license": "MIT",
   "authors": [
