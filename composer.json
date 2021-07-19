@@ -1,0 +1,25 @@
+{
+  "name": "brw/xp-user",
+  "description": "An extended WP_User class. X is better than W right?",
+  "keywords": [
+    "WordPress",
+    "WP_User"
+  ],
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Ben Rutland",
+      "email": "info@benrutlandweb.co.uk",
+      "homepage": "https://github.com/BenRutlandWeb"
+    }
+  ],
+  "minimum-stability": "dev",
+  "require": {
+    "php": "^7.0|^8.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "XtraPress\\": "src/"
+    }
+  }
+}
