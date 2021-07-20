@@ -4,7 +4,7 @@ An extended `WP_User` class.
 
 `XtraPress\User` extends the `WP_User` class adding some useful and logical methods to make interacting with a user much simpler.
 
-The class provides methods to interact with user roles in a more succinct manner.
+The class provides methods to interact with user roles, capabilities, meta and properties in a more succinct manner.
 
 ## Installation
 
