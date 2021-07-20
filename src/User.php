@@ -6,5 +6,5 @@ use WP_User;
 
 class User extends WP_User
 {
-    use HasRoles;
+    use HasCapabilities, HasMeta, HasRoles;
 }
