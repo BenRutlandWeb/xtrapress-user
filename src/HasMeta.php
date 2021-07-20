@@ -2,8 +2,6 @@
 
 namespace XtraPress;
 
-use RuntimeException;
-
 trait HasMeta
 {
     /**
@@ -14,11 +12,11 @@ trait HasMeta
      */
     public function hasMeta(string $key)
     {
-        return metadata_exists('user', $this->ID, $key);
+        return $this->has_prop($key);
     }
 
     /**
-     * Get a meta value.
+     * Retrieve the value of a property or meta key.
      *
      * @param string $key
      * @param mixed|null $default
@@ -26,7 +24,19 @@ trait HasMeta
      */
     public function getMeta(string $key, $default = null)
     {
-        return get_metadata('user', $this->ID, $key, true) ?: $default;
+        return $this->get($key) ?: $default;
+    }
+
+    /**
+     * Get all the user meta.
+     *
+     * @return array
+     */
+    public function getAllMeta()
+    {
+        return array_map(function ($meta) {
+            return maybe_unserialize(count($meta) !== 1 ? $meta : $meta[0]);
+        }, get_user_meta($this->ID));
     }
 
     /**
@@ -42,7 +52,7 @@ trait HasMeta
             return true;
         }
 
-        return update_metadata('user', $this->ID, $key, $value) !== false;
+        return update_user_meta($this->ID, $key, $value) !== false;
     }
 
     /**
@@ -53,6 +63,6 @@ trait HasMeta
      */
     public function deleteMeta(string $key)
     {
-        return delete_metadata('user', $this->ID, $key);
+        return delete_user_meta($this->ID, $key);
     }
 }
