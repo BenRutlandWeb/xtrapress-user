@@ -117,6 +117,18 @@ $user->deleteMeta('membership_number');
 
 ### Miscellaneous
 
+You can delete the user with the `delete` method.
+
+```php
+<?php
+
+use XtraPress\User;
+
+$user = new User(1);
+
+$user->delete();
+```
+
 The `User` class implements `JsonSerializable` To output the user properties (including meta) as an array when enocded as JSON.
 
 ```php
@@ -127,4 +139,20 @@ use XtraPress\User;
 $user = new User(1);
 
 echo json_encode( $user );
+```
+
+The `User` class magic methods: `__isset`, `__get`, `__set` and `__unset` have been enhanced with aliased keys, so you don't have to prefix the core properties with "user\_".
+
+```php
+<?php
+
+use XtraPress\User;
+
+$user = new User(1);
+
+isset($user->email) // true
+$user->email; // same as $user->user_email
+$user->email = 'email@exampe.com'; // sets $user->user_email property
+unset($user->email) // unsets $user->user_email property
+
 ```
