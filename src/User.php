@@ -3,15 +3,16 @@
 namespace XtraPress;
 
 use ArrayAccess;
+use Illuminate\Support\Traits\Macroable;
 use JsonSerializable;
 use WP_User;
 
 class User extends WP_User implements ArrayAccess, JsonSerializable
 {
-    use HasCapabilities, HasMeta, HasRoles;
+    use HasCapabilities, HasMeta, HasRoles, Macroable;
 
     /**
-     * Properrty aliases.
+     * Property aliases.
      *
      * @var array
      */
