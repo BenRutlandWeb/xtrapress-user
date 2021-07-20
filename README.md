@@ -24,6 +24,34 @@ require_once __DIR__ . '/vendor/autoload.php';
 
 ## How to use
 
+### Attributes
+
+The `User` class magic methods: `__isset`, `__get`, `__set` and `__unset` have been enhanced with aliased keys, so you don't have to prefix the core properties with "user\_". The class also implements `ArrayAccess`, and provides `has`, `get`, `add`, and `remove` methods.
+
+```php
+<?php
+
+use XtraPress\User;
+
+$user = new User(1);
+
+isset($user->email); // true
+$user->email; // same as $user->user_email
+$user->email = 'email@example.com'; // sets $user->user_email property
+unset($user->email); // unsets $user->user_email property
+
+isset($user['email']);
+$user['email'];
+$user['email'] = 'email@example.com';
+unset($user['email']);
+
+$user->has('email');
+$user->get('email');
+$user->add('email', 'email@example.com');
+$user->remove('email');
+
+```
+
 ### Capabilities
 
 The `User` class provides (via the `HasCapabilities` trait) several methods to make interacting with capabilities ~~simple~~ slightly easier.
@@ -49,6 +77,67 @@ $user->canAny(['read', 'manage_options']) // true
 
 $user->addCapability('tames_unicorns');
 $user->removeCapability('knows_limits');
+```
+
+### Macros
+
+The `User` class provides a `macro` method to add custom functionality to the class. This is useful for custom roles. The user instance is bound to `$this`, and the parameters are passed to the given callback.
+
+```php
+<?php
+
+use XtraPress\User;
+
+User::macro('isCrustyJuggler', function() {
+    return $this->hasRole('crusty_juggler');
+});
+
+User::macro('name', function() {
+    return $this->first_name . ' ' . $this->last_name;
+});
+
+User::macro('login', function (string $email, string $password, bool $remember = false) {
+    return wp_signon([
+        'user_login'    => $email,
+        'user_password' => $password,
+        'remember'      => $remember,
+    ]);
+});
+
+$user = new User(1);
+
+$user->isCrustyJuggler(); // true
+$user->name(); // John Doe
+
+User::login('email@example.com', 'password', true);
+```
+
+### Meta
+
+The `User` class provides (via the `HasMeta` trait) several methods to make interacting with meta simple.
+
+```php
+hasMeta( string $key ): boolean
+getMeta( string $key, mixed $default ): mixed
+getAllMeta(): array
+setMeta( string $key, mixed $value ): boolean
+deleteMeta( string $key ): boolean
+```
+
+```php
+<?php
+
+use XtraPress\User;
+
+$user = new User(1);
+
+if (!$user->hasMeta('membership_number')) {
+    $user->setMeta('membership_number', '00000001');
+}
+
+$user->getMeta('membership_number') // 00000001
+
+$user->deleteMeta('membership_number');
 ```
 
 ### Roles
@@ -87,34 +176,6 @@ $user->isSubscriber() // true
 $user->hasRole('administrator') // false
 ```
 
-### Meta
-
-The `User` class provides (via the `HasMeta` trait) several methods to make interacting with meta simple.
-
-```php
-hasMeta( string $key ): boolean
-getMeta( string $key, mixed $default ): mixed
-getAllMeta(): array
-setMeta( string $key, mixed $value ): boolean
-deleteMeta( string $key ): boolean
-```
-
-```php
-<?php
-
-use XtraPress\User;
-
-$user = new User(1);
-
-if (!$user->hasMeta('membership_number')) {
-    $user->setMeta('membership_number', '00000001');
-}
-
-$user->getMeta('membership_number') // 00000001
-
-$user->deleteMeta('membership_number');
-```
-
 ### Miscellaneous
 
 You can delete the user with the `delete` method.
@@ -139,20 +200,4 @@ use XtraPress\User;
 $user = new User(1);
 
 echo json_encode( $user );
-```
-
-The `User` class magic methods: `__isset`, `__get`, `__set` and `__unset` have been enhanced with aliased keys, so you don't have to prefix the core properties with "user\_".
-
-```php
-<?php
-
-use XtraPress\User;
-
-$user = new User(1);
-
-isset($user->email) // true
-$user->email; // same as $user->user_email
-$user->email = 'email@exampe.com'; // sets $user->user_email property
-unset($user->email) // unsets $user->user_email property
-
 ```
