@@ -82,6 +82,51 @@ class User extends WP_User implements ArrayAccess, JsonSerializable
     }
 
     /**
+     * Determine if the property exists
+     *
+     * @param string $key
+     * @return boolean
+     */
+    public function has(string $key)
+    {
+        return $this->__isset($key);
+    }
+
+    /**
+     * Get the property
+     *
+     * @param string $key
+     * @return mixed
+     */
+    public function get($key)
+    {
+        return $this->__get($key);
+    }
+
+    /**
+     * Set the property
+     *
+     * @param string $key
+     * @param mixed $value
+     * @return void
+     */
+    public function set(string $key, $value)
+    {
+        $this->__set($key, $value);
+    }
+
+    /**
+     * Unset the property
+     *
+     * @param string $key
+     * @return void
+     */
+    public function remove(string $key)
+    {
+        $this->__unset($key);
+    }
+
+    /**
      * Determine if the offset exists
      *
      * @param string $key
