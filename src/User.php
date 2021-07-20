@@ -2,12 +2,32 @@
 
 namespace XtraPress;
 
+use ArrayAccess;
 use JsonSerializable;
 use WP_User;
 
-class User extends WP_User implements JsonSerializable
+class User extends WP_User implements ArrayAccess, JsonSerializable
 {
     use HasCapabilities, HasMeta, HasRoles;
+
+    /**
+     * Properrty aliases.
+     *
+     * @var array
+     */
+    protected static $aliases = [
+        'login'          => 'user_login',
+        'username'       => 'user_login',
+        'pass'           => 'user_pass',
+        'password'       => 'user_pass',
+        'nicename'       => 'user_nicename',
+        'slug'           => 'user_nicename',
+        'email'          => 'user_email',
+        'url'            => 'user_url',
+        'registered'     => 'user_registered',
+        'activation_key' => 'user_activation_key',
+        'status'         => 'user_status',
+    ];
 
     /**
      * Remove user.
@@ -20,11 +40,11 @@ class User extends WP_User implements JsonSerializable
     }
 
     /**
-     * Specify data which should be serialized to JSON
+     * Get all the user properties.
      *
      * @return array
      */
-    public function jsonSerialize()
+    public function all()
     {
         return $this->to_array() + $this->getAllMeta();
     }
@@ -34,7 +54,7 @@ class User extends WP_User implements JsonSerializable
      */
     public function __isset($key)
     {
-        return parent::__isset($this->aliasedKey($key));
+        return parent::__isset(static::$aliases[$key] ?: $key);
     }
 
     /**
@@ -42,7 +62,7 @@ class User extends WP_User implements JsonSerializable
      */
     public function __get($key)
     {
-        return parent::__get($this->aliasedKey($key)) ?: null;
+        return parent::__get(static::$aliases[$key] ?: $key) ?: null;
     }
 
     /**
@@ -50,7 +70,7 @@ class User extends WP_User implements JsonSerializable
      */
     public function __set($key, $value)
     {
-        parent::__set($this->aliasedKey($key), $value);
+        parent::__set(static::$aliases[$key] ?: $key, $value);
     }
 
     /**
@@ -58,31 +78,71 @@ class User extends WP_User implements JsonSerializable
      */
     public function __unset($key)
     {
-        parent::__unset($this->aliasedKey($key));
+        parent::__unset(static::$aliases[$key] ?: $key);
     }
 
     /**
-     * Determine if a key is aliased.
+     * Determine if the offset exists
      *
      * @param string $key
+     * @return boolean
+     */
+    public function offsetExists($key)
+    {
+        return $this->__isset($key);
+    }
+
+    /**
+     * Get the offset
+     *
+     * @param string $key
+     * @return mixed
+     */
+    public function offsetGet($key)
+    {
+        return $this->__get($key);
+    }
+
+    /**
+     * Set the offset
+     *
+     * @param string $key
+     * @param mixed $value
+     * @return void
+     */
+    public function offsetSet($key, $value)
+    {
+        $this->__set($key, $value);
+    }
+
+    /**
+     * Unset the offset
+     *
+     * @param string $key
+     * @return void
+     */
+    public function offsetUnset($key)
+    {
+        $this->__unset($key);
+    }
+
+    /**
+     * Convert the model to its string representation.
+     *
      * @return string
      */
-    protected function aliasedKey(string $key)
+    public function __toString()
     {
-        $aliases = [
-            'login'          => 'user_login',
-            'username'       => 'user_login',
-            'pass'           => 'user_pass',
-            'password'       => 'user_pass',
-            'nicename'       => 'user_nicename',
-            'slug'           => 'user_nicename',
-            'email'          => 'user_email',
-            'url'            => 'user_url',
-            'registered'     => 'user_registered',
-            'activation_key' => 'user_activation_key',
-            'status'         => 'user_status',
-        ];
+        return json_encode($this->all());
+    }
 
-        return $aliases[$key] ?: $key;
+    /**
+     * Specify data which should be serialized to JSON
+     *
+     * @return array
+     */
+    public function jsonSerialize()
+    {
+        return $this->all();
     }
 }
