@@ -11,7 +11,7 @@ The class provides methods to interact with user roles, capabilities, meta and p
 Install via Composer:
 
 ```
-composer require brw/xtrapress-user
+composer require xtrapress/user
 ```
 
 Use Composer's autoload:
