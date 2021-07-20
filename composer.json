@@ -1,5 +1,5 @@
 {
-  "name": "brw/xtrapress-user",
+  "name": "xtrapress/user",
   "description": "An extended WP_User class.",
   "keywords": [
     "WordPress",
