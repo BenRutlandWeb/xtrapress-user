@@ -190,7 +190,7 @@ $user = new User(1);
 $user->delete();
 ```
 
-The `User` class implements `JsonSerializable` To output the user properties (including meta) as an array when enocded as JSON.
+The `User` class implements `JsonSerializable` to output the user properties (including meta) as an array when encoded as JSON.
 
 ```php
 <?php
