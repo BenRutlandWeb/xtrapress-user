@@ -93,15 +93,13 @@ User::macro('isCrustyJuggler', function() {
 });
 
 User::macro('name', function() {
-    return $this->first_name . ' ' . $this->last_name;
+    return "{$this->first_name} {$this->last_name}";
 });
 
-User::macro('login', function (string $email, string $password, bool $remember = false) {
-    return wp_signon([
-        'user_login'    => $email,
-        'user_password' => $password,
-        'remember'      => $remember,
-    ]);
+User::macro('notify', function(string $subject, string $body, array $headers = [], array $attachments = []) {
+    $to = "{$this->first_name} {$this->last_name} <{$this->email}>";
+
+    return wp_mail($to, $subject, $body, $headers, $attachments);
 });
 
 $user = new User(1);
@@ -109,7 +107,7 @@ $user = new User(1);
 $user->isCrustyJuggler(); // true
 $user->name(); // John Doe
 
-User::login('email@example.com', 'password', true);
+$user->notify('email subject', "Hi {$user->first_name}");
 ```
 
 ### Meta
