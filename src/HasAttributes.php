@@ -5,30 +5,11 @@ namespace XtraPress;
 trait HasAttributes
 {
     /**
-     * Property aliases.
-     *
-     * @var array
-     */
-    protected static $aliases = [
-        'login'          => 'user_login',
-        'username'       => 'user_login',
-        'pass'           => 'user_pass',
-        'password'       => 'user_pass',
-        'nicename'       => 'user_nicename',
-        'slug'           => 'user_nicename',
-        'email'          => 'user_email',
-        'url'            => 'user_url',
-        'registered'     => 'user_registered',
-        'activation_key' => 'user_activation_key',
-        'status'         => 'user_status',
-    ];
-
-    /**
      * {@inheritDoc}
      */
     public function __isset($key)
     {
-        return parent::__isset(static::$aliases[$key] ?: $key);
+        return parent::__isset($this->getAlias($key));
     }
 
     /**
@@ -36,7 +17,7 @@ trait HasAttributes
      */
     public function __get($key)
     {
-        return parent::__get(static::$aliases[$key] ?: $key) ?: null;
+        return parent::__get($this->getAlias($key)) ?: null;
     }
 
     /**
@@ -44,7 +25,7 @@ trait HasAttributes
      */
     public function __set($key, $value)
     {
-        parent::__set(static::$aliases[$key] ?: $key, $value);
+        parent::__set($this->getAlias($key), $value);
     }
 
     /**
@@ -52,7 +33,7 @@ trait HasAttributes
      */
     public function __unset($key)
     {
-        parent::__unset(static::$aliases[$key] ?: $key);
+        parent::__unset($this->getAlias($key));
     }
 
     /**
@@ -143,5 +124,16 @@ trait HasAttributes
     public function offsetUnset($key)
     {
         $this->__unset($key);
+    }
+
+    /**
+     * Get an attribute by its alias
+     *
+     * @param string $key
+     * @return string
+     */
+    protected function getAlias(string $key)
+    {
+        return $this->aliases[$key] ?: $key;
     }
 }

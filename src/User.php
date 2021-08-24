@@ -12,6 +12,33 @@ class User extends WP_User implements ArrayAccess, JsonSerializable
     use HasAttributes, HasCapabilities, HasMeta, HasRoles, Macroable;
 
     /**
+     * Property aliases.
+     *
+     * @var array
+     */
+    protected $aliases = [
+        'id'             => 'ID',
+        'login'          => 'user_login',
+        'username'       => 'user_login',
+        'pass'           => 'user_pass',
+        'password'       => 'user_pass',
+        'nicename'       => 'user_nicename',
+        'slug'           => 'user_nicename',
+        'email'          => 'user_email',
+        'url'            => 'user_url',
+        'registered'     => 'user_registered',
+        'activation_key' => 'user_activation_key',
+        'status'         => 'user_status',
+    ];
+
+    /**
+     * The model object type
+     *
+     * @var string
+     */
+    protected $objectType = 'user';
+
+    /**
      * Remove user.
      *
      * @return boolean
@@ -22,13 +49,23 @@ class User extends WP_User implements ArrayAccess, JsonSerializable
     }
 
     /**
-     * Get all the user properties.
+     * Get all the user properties as an array.
      *
      * @return array
      */
-    public function all()
+    public function toArray()
     {
         return $this->to_array() + $this->getAllMeta();
+    }
+
+    /**
+     * Get all the user properties as JSON.
+     *
+     * @return string
+     */
+    public function toJson(int $options = 0)
+    {
+        return json_encode($this->toArray(), $options);
     }
 
     /**
@@ -38,7 +75,7 @@ class User extends WP_User implements ArrayAccess, JsonSerializable
      */
     public function __toString()
     {
-        return json_encode($this->all());
+        return $this->toJson();
     }
 
     /**
@@ -48,6 +85,6 @@ class User extends WP_User implements ArrayAccess, JsonSerializable
      */
     public function jsonSerialize()
     {
-        return $this->all();
+        return $this->toArray();
     }
 }

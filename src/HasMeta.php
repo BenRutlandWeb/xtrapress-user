@@ -12,7 +12,7 @@ trait HasMeta
      */
     public function hasMeta(string $key)
     {
-        return $this->has_prop($key);
+        return metadata_exists($this->objectType, $this->ID, $key);
     }
 
     /**
@@ -36,7 +36,7 @@ trait HasMeta
     {
         return array_map(function ($meta) {
             return maybe_unserialize(count($meta) !== 1 ? $meta : $meta[0]);
-        }, get_user_meta($this->ID));
+        }, get_metadata($this->objectType, $this->ID));
     }
 
     /**
@@ -52,7 +52,7 @@ trait HasMeta
             return true;
         }
 
-        return update_user_meta($this->ID, $key, $value) !== false;
+        return update_metadata($this->objectType, $this->ID, $key, $value) !== false;
     }
 
     /**
@@ -63,6 +63,6 @@ trait HasMeta
      */
     public function deleteMeta(string $key)
     {
-        return delete_user_meta($this->ID, $key);
+        return delete_metadata($this->objectType, $this->ID, $key);
     }
 }
